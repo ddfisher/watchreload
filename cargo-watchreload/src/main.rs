@@ -25,7 +25,17 @@ async fn main_async() -> Result<()> {
         }
     });
 
-    let websocket_port = "9001";
+    let host = std::env::args()
+        .nth(2)
+        // .unwrap_or_else(|| format!("0.0.0.0:{websocket_port}"));
+        .unwrap_or_else(|| String::from("0.0.0.0"));
+
+    let websocket_port = std::env::args()
+        .nth(3)
+        // .unwrap_or_else(|| format!("0.0.0.0:{websocket_port}"));
+        .unwrap_or_else(|| String::from("9001"));
+
+    let address = format!("{host}:{websocket_port}");
 
     tokio::process::Command::new("cargo")
         .args([
@@ -39,14 +49,10 @@ async fn main_async() -> Result<()> {
         .spawn()?;
     println!("Cargo watch is running");
 
-    let addr = std::env::args()
-        .nth(1)
-        .unwrap_or_else(|| format!("0.0.0.0:{websocket_port}"));
-
     // Create the event loop and TCP listener we'll accept connections on.
-    let try_socket = TcpListener::bind(&addr).await;
+    let try_socket = TcpListener::bind(&address).await;
     let listener = try_socket.expect("Failed to bind");
-    info!("Listening on: {}", addr);
+    info!("Listening on: {}", address);
 
     while let Ok((stream, _)) = listener.accept().await {
         tokio::spawn(accept_connection(stream, receiver.clone()));
