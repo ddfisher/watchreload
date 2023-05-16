@@ -25,6 +25,8 @@ async fn main_async() -> Result<()> {
         }
     });
 
+    let websocket_port = "9001";
+
     tokio::process::Command::new("cargo")
         .args([
             "watch",
@@ -33,13 +35,13 @@ async fn main_async() -> Result<()> {
             "--shell",
             &format!("kill -USR1 {pid}"),
         ])
-        .env("WATCHRELOAD_ENABLED", "true")
+        .env("WATCHRELOAD_PORT", websocket_port)
         .spawn()?;
     println!("Cargo watch is running");
 
     let addr = std::env::args()
         .nth(1)
-        .unwrap_or_else(|| "0.0.0.0:9001".to_string());
+        .unwrap_or_else(|| format!("0.0.0.0:{websocket_port}"));
 
     // Create the event loop and TCP listener we'll accept connections on.
     let try_socket = TcpListener::bind(&addr).await;
