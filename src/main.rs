@@ -33,6 +33,7 @@ async fn main_async() -> Result<()> {
             "--shell",
             &format!("kill -USR1 {pid}"),
         ])
+        .env("WATCHRELOAD_ENABLED", "true")
         .spawn()?;
     println!("Cargo watch is running");
 
