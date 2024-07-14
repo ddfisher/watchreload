@@ -6,10 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow= "1"
+anyhow = "1"
+clap = { version = "4.5.9", features = ["derive"] }
 env_logger = "*"
 futures-util = "*"
 log = "*"
 signal-hook = "0.3"
 tokio = { version = "1.0", features = ["full"] }
-tokio-tungstenite = "0.19"
+tokio-tungstenite = "0.23.1"
